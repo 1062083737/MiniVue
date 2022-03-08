@@ -15,7 +15,13 @@
       console.log(vnode);
 
       // 2.通过mount函数将vnode挂载到根节点
-      mount(vnode, document.getElementById('app'))
+      mount(vnode, document.getElementById("app"));
+
+      // 3.创建新的vnode
+    //   const vnode1 = h("h2", { class: "newbox" }, [h("h2", null, "yu")]);
+      const vnode1 = h("div", { class: "newbox" }, [h("h2", null, "yu")]);
+
+      patch(vnode, vnode1);
     </script>
   </body>
 </html>
