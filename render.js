@@ -46,13 +46,11 @@ const patch = (n1, n2) => {
     n1ElParent.removeChild(n1.el);
     mount(n2, n1ElParent);
   } else {
-    // 1.取出element对象， 并在n2中保存
     const el = (n2.el = n1.el);
 
-    // 2.处理props
+    // 1.处理props
     const oldProps = n1.props || {};
     const newProps = n2.props || {};
-    // 2.1获取所有的newProps添加到el
     for (const key in newProps) {
       const oldValue = oldProps[key];
       const newValue = newProps[key];
@@ -64,51 +62,52 @@ const patch = (n1, n2) => {
         }
       }
     }
-    // 2.2删除旧的props
     for (const key in oldProps) {
       if (!key in newProps) {
         if (key.startsWith("on")) {
           const value = oldProps[key];
-          el.removeEventListener(key.slice(2).toLowerCase(), value);
+          el.removeEventListener(key.slice(2).toLowerCase, value);
         } else {
           el.removeAttribute(key);
         }
       }
     }
-
-    // 3.处理children
+    // 2.处理children
     const oldChildren = n1.children || [];
-    const newChildren = n2.children || [];
-    if (typeof newChildren === "string") {
+    const newChildlren = n2.children || [];
+    if (typeof newChildlren === "string") {
       if (typeof oldChildren === "string") {
-        if (newChildren !== oldChildren) {
-          el.textContent = newChildren;
+        if (newChildlren !== oldChildren) {
+          el.textContent = newChildlren;
         }
       } else {
-        el.innerHTML = newChildren;
+        el.innerHTML = newChildlren;
       }
     } else {
-      if (typeof oldChildren === "string") {
+      if (typeof oldChildren === String) {
         el.innerHTML = "";
-        newChildren.forEach((item) => {
+        newChildlren.forEach((item) => {
           mount(item, el);
         });
       } else {
-        //diff
-        const commonLength = Math.min(oldChildren.length, newChildren.length);
-        for (let i = 0; i < commonLength.length; i++) {
-          patch(oldChildren[i], newChildren[i]);
+        const commonLength = Math.min(oldChildren.length, newChildlren.length)
+        // 相同节点进行patch
+        for (let i = 0; i < commonLength; i++) {
+          patch(oldChildren[i], newChildlren[i])          
         }
-        if (newChildren.length > oldChildren.length) {
-          newChildren.slice(oldChildren.length).forEach((item) => {
-            mount(item, el);
-          });
+        // 新节点更长
+        if (oldChildren.length < newChildlren.length) {
+          newChildlren.slice(oldChildren.length).forEach(item => {
+            mount(item,el)
+          })
         }
-        if (newChildren.length < oldChildren.length) {
-          oldChildren.slice(newChildren.length).forEach((item) => {
-            el.removeChild(item.el);
-          });
+        // 旧节点更长
+        if (oldChildren.length > newChildlren.length) {
+          oldChildren.slice(newChildlren.length).forEach(item => {
+            el.removeChild(item.el)
+          })
         }
+
       }
     }
   }

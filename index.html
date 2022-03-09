@@ -18,10 +18,16 @@
       mount(vnode, document.getElementById("app"));
 
       // 3.创建新的vnode
-      //   const vnode1 = h("h2", { class: "newbox" }, [h("h2", null, "yu")]);
-      const vnode1 = h("div", { class: "newbox" }, [h("h2", null, "yu")]);
+      const vnode1 = h(
+        "div",
+        { class: "newbox" },
+        [h("h2", null, "xiaoyu"),
+        h("button", { onclick: function () {} }, "按钮")]
+      );
 
-      patch(vnode, vnode1);
+      setTimeout(() => {
+        patch(vnode, vnode1);
+      }, 2000);
     </script>
   </body>
 </html>
